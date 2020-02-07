@@ -1,0 +1,23 @@
+fluidsynth --server --audio-driver=alsa -o audio.alsa.device=hw:0 /usr/share/sounds/sf2/FluidR3_GM.sf2
+
+aconnect -i
+get xplaymidi
+https://bbs.archlinux.org/viewtopic.php?id=14228
+
+I ran 'modconf', then selected kernel/sound/pci/emu10k1, and found three emu10k1 modules, but only one was enabled. I enabled 'snd-emu10k1-synth'.
+then it worked
+
+liboss4-salsa-asound2/stable 4.2-build2010-5+b3 armhf
+  OSS to Alsa compatibility library - binary compatibility symlink
+
+liboss4-salsa2/stable 4.2-build2010-5+b3 armhf
+  OSS to Alsa compatibility library
+
+
+Recommended packages:
+  linux-headers-686-pae | linux-headers-amd64 | linux-headers-generic
+The following NEW packages will be installed:
+
+Package we need: oss4-dkms
+Fails to build according to this guy:
+https://www.raspberrypi.org/forums/viewtopic.php?t=190219
