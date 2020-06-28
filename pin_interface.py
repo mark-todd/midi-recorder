@@ -52,5 +52,5 @@ def start(bounce_time: int):
     while True:
         pass
 
-def main():
+if __name__ == '__main__':
     app()
