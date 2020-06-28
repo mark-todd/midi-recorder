@@ -3,14 +3,21 @@ def setwarnings(Warn):
         print('warnings on')
     else:
         print('warnings off')
+
 def BOARD():
     print('Board numbering set')
+
 def IN():
     do='nothing'
-def setup(number, Modehere):
+
+def OUT():
+    do='nothing'
+def setup(number, Modehere, pull_up_down=''):
     print('Pin no '+str(number)+' set to in')
+
 def setmode(Modehere):
     print('Mode set')
+
 def input(number):
     while True:
         try:
@@ -24,4 +31,6 @@ def input(number):
         return True
     else:
         return False
+def PUD_DOWN():
+    print('Puds down')
 import time

@@ -87,7 +87,7 @@ DecSpeed_pin=19
 ResSpeed_pin=21
 Shutdown_pin=24
 Led_pin=26
-print(os.getcwd())
+
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(Record_pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
@@ -106,8 +106,8 @@ looping=0
 Factor=1
 playid=0
 
-RecordingOut='/home/pi/midi/output.mid'
-InFile='/home/pi/midi/output.mid'
+RecordingOut='output.mid'
+InFile='output.mid'
 #Prepare score for rescale
 score = ''
 loop_tweak=-0.17
