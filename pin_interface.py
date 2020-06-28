@@ -1,4 +1,4 @@
-from .recorder import MIDIRecorder
+from recorder import MIDIRecorder
 import RPi.GPIO as GPIO
 import os
 import typer
