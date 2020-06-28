@@ -137,19 +137,19 @@ class MIDIRecorder:
 
             self.looping_process = None
 
-    def toggle_play(self, channel):
+    def toggle_play(self):
         if self._is_playing():
             self._stop_play_file()
         elif not self._is_recording() and not self._is_looping():
             self._play_file()
 
-    def toggle_record(self, channel):
+    def toggle_record(self):
         if self._is_recording():
             self._stop_record_file()
         elif not self._is_playing() and not self._is_looping():
             self._record_file()
 
-    def toggle_loop(self, channel):
+    def toggle_loop(self):
         if self._is_looping():
             self._stop_loop_file()
         elif not self._is_playing() and not self._is_recording():

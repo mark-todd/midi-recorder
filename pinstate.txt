@@ -1,9 +1,0 @@
-0000000
-
-Record_pin=0
-PlayPause_pin=1
-LoopPlay_pin=2
-IncSpeed_pin=3
-DecSpeed_pin=4
-ResSpeed_pin=5
-Shutdown_pin=6
