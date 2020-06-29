@@ -33,8 +33,11 @@ def _get_n_switch():
           num=num+2**i*binar_digit
     return num
 
+def track_wrapper(r, _):
+    r.change_track(_get_n_switch())
+
 @app.command()
-def start(bounce_time: int):
+def start(bounce_time: int, loop_tweak_time: int):
     # GPIO setup
     GPIO.setwarnings(False)
     GPIO.setmode(GPIO.BOARD)
@@ -42,28 +45,32 @@ def start(bounce_time: int):
         GPIO.setup(pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
     for pin in output_pins.values():
         GPIO.setup(pin, GPIO.OUT)
-    for x in switcheslist:
+    for x in switches:
         GPIO.setup(x, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
     print('loading')
-    r = MIDIRecorder('/home/pi/test_midi_dir', 20, 20, 1, 0)
+    r = MIDIRecorder('/home/pi/test_midi_dir', 20, 20, 64, loop_tweak_time)
     GPIO.output(output_pins['led'], 1)
+    r.change_track(_get_n_switch())
 
     GPIO.add_event_detect(input_pins['toggle_record'], GPIO.RISING, \
-            callback=lambda: _r.toggle_record, bouncetime=bounce_time)
+            callback=lambda _: r.toggle_record(), bouncetime=bounce_time)
     GPIO.add_event_detect(input_pins['toggle_play'], GPIO.RISING, \
-            callback=lambda: _r.toggle_play, bouncetime=bounce_time)
+            callback=lambda _: r.toggle_play(), bouncetime=bounce_time)
     GPIO.add_event_detect(input_pins['toggle_loop'], GPIO.RISING, \
-            callback=lambda _ :r.toggle_loop, bouncetime=bounce_time)
+            callback=lambda _: r.toggle_loop(), bouncetime=bounce_time)
     GPIO.add_event_detect(input_pins['increase_tempo'], GPIO.RISING, \
-            callback=lambda _:r.change_speed(0.9), bouncetime=bounce_time)
-    GPIO.add_event_detect(input_pins['decrease_tempo'], GPIO.RISING, \
-            callback=lambda _:r.change_speed(1/0.9), bouncetime=bounce_time)
-    GPIO.add_event_detect(input_pins['reset_tempo'], GPIO.RISING, \
-            callback=lambda _:r.change_absolute_speed(1), bouncetime=bounce_time)
-    GPIO.add_event_detect(input_pins['shutdown'], GPIO.RISING, \
-            callback=lambda _:os.system('sudo shutdown -h now'), \
+            callback=lambda _: r.change_speed(0.9), \
             bouncetime=bounce_time)
-    for pin in input_pins.keys() + switches:
+    GPIO.add_event_detect(input_pins['decrease_tempo'], GPIO.RISING, \
+            callback=lambda _: r.change_speed(1/0.9), \
+            bouncetime=bounce_time)
+    GPIO.add_event_detect(input_pins['reset_tempo'], GPIO.RISING, \
+            callback=lambda _: r.change_absolute_speed(1), \
+            bouncetime=bounce_time)
+    GPIO.add_event_detect(input_pins['shutdown'], GPIO.RISING, \
+            callback=lambda _: os.system('sudo shutdown -h now'), \
+            bouncetime=bounce_time)
+    for pin in switches:
         GPIO.add_event_detect(pin, GPIO.BOTH, \
                 callback=lambda _:r.change_track(_get_n_switch()), \
                 bouncetime=bounce_time)
