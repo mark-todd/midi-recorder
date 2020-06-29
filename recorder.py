@@ -98,7 +98,11 @@ class MIDIRecorder:
             self.recording_process = None
 
             # Reparse the score
-            self.scores[self.n_track] = (converter.parse(path), 1)
+            try:
+                self.scores[self.n_track] = \
+                        (converter.parse(path), 1)
+            except:
+                pass
             self.recording = False
 
     def _is_looping(self):
@@ -132,21 +136,31 @@ class MIDIRecorder:
                 except queue.Empty:
                     break
                 else:
-                    os.kill(popen, signal.SIGTERM)
+                    try:
+                        os.kill(popen, signal.SIGTERM)
+                    except ProcessLookupError:
+                        pass
 
             self.looping_process = None
 
     def toggle_play(self):
         if self._is_playing():
+            print('stop')
             self._stop_play_file()
         elif not self._is_recording() and not self._is_looping():
+            print('play')
             self._play_file()
 
     def toggle_record(self):
         if self._is_recording():
+            print('stop record')
             self._stop_record_file()
         elif not self._is_playing() and not self._is_looping():
+            print('start record')
             self._record_file()
+        else:
+            print('playing: {}'.format(self._is_playing()))
+            print('looping: {}'.format(self._is_looping()))
 
     def toggle_loop(self):
         if self._is_looping():
