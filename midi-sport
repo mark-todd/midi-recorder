@@ -37,7 +37,7 @@ def track_wrapper(r, _):
     r.change_track(_get_n_switch())
 
 @app.command()
-def start(bounce_time: int, loop_tweak_time: int):
+def start(bounce_time: int, loop_tweak_time: float):
     # GPIO setup
     GPIO.setwarnings(False)
     GPIO.setmode(GPIO.BOARD)

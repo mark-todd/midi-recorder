@@ -4,7 +4,7 @@ import subprocess
 import time
 from mido import MidiFile
 from multiprocessing import Process, Queue
-import music21
+from music21 import converter
 import signal
 import queue
 
@@ -34,12 +34,11 @@ class MIDIRecorder:
         self.loop_tweak = loop_tweak
         self.test_mode = test_mode
 
-        # TODO: parse music21 scores here
         def generate_score(n):
             path = os.path.join(self.mididir, f'track-{n}.mid')
             if os.path.isfile(path):
                 try:
-                    return music21.converter.parse(path)
+                    return converter.parse(path)
                 except:
                     return None
             else:
@@ -75,7 +74,7 @@ class MIDIRecorder:
         if not recording and self.recording:
             # Reparse the score
             try:
-                self.scores[self.n_track] = (music21.converter.parse(path), 1)
+                self.scores[self.n_track] = (converter.parse(path), 1)
             except:
                 pass
             self.recording = False
@@ -99,7 +98,7 @@ class MIDIRecorder:
             self.recording_process = None
 
             # Reparse the score
-            self.scores[self.n_track] = (music21.converter.parse(path), 1)
+            self.scores[self.n_track] = (converter.parse(path), 1)
             self.recording = False
 
     def _is_looping(self):
