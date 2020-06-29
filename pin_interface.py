@@ -18,6 +18,20 @@ output_pins = {
         'led': 26
 }
 
+switches=[16,8,18,10,22,12]
+
+def _get_n_switch():
+    binaries=[0,1,0,1,0,1]
+    initials = [GPIO.input(p) for p in switches]
+    outputs = [abs(b-i) for (b,i) in zip(binaries,initials)]
+
+    num=0
+    for i in range(0,len(outputs)):
+          position=-1-i
+          binar_digit=outputs[position]
+          num=num+2**i*binar_digit
+    return num
+
 @app.command()
 def start(bounce_time: int):
     # GPIO setup
@@ -27,7 +41,8 @@ def start(bounce_time: int):
         GPIO.setup(pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
     for pin in output_pins.values():
         GPIO.setup(pin, GPIO.OUT)
-
+    for x in switcheslist:
+        GPIO.setup(x, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
     print('loading')
     r = MIDIRecorder('/home/pi/test_midi_dir', 20, 20, 1, 0)
     GPIO.output(output_pins['led'], 1)
@@ -47,6 +62,10 @@ def start(bounce_time: int):
     GPIO.add_event_detect(input_pins['shutdown'], GPIO.RISING, \
             callback=lambda _:os.system('sudo shutdown -h now'), \
             bouncetime=bounce_time)
+    for pin in input_pins.keys() + switches:
+        GPIO.add_event_detect(pin, GPIO.BOTH, \
+                callback=lambda _:r.change_track(_get_n_switch()), \
+                bouncetime=bounce_time)
     print('loaded')
 
     while True:
